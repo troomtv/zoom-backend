@@ -11,7 +11,6 @@ app.use(express.json());
 
 const port = process.env.PORT || 4000;
 
-// Generate Zoom signature
 app.post("/signature", (req, res) => {
   try {
     const { meetingNumber, role } = req.body;
@@ -24,22 +23,22 @@ app.post("/signature", (req, res) => {
     const exp = iat + 60 * 60 * 2; // 2 hours
 
     const payload = {
-      sdkKey: process.env.mYUp0Z8RQnG50y0cTfZbGg,
+      sdkKey: process.env.ZOOM_SDK_KEY,
       mn: meetingNumber,
       role,
       iat,
       exp,
-      appKey: process.env.mYUp0Z8RQnG50y0cTfZbGg,
-      tokenExp: exp
+      appKey: process.env.ZOOM_SDK_KEY,
+      tokenExp: exp,
     };
 
-    const token = jwt.sign(payload, process.env.MmpnpU2jyJyLNBiIfbMAfcutLfQ63HXa, {
-      algorithm: "HS256"
+    const token = jwt.sign(payload, process.env.ZOOM_SDK_SECRET, {
+      algorithm: "HS256",
     });
 
     res.json({
       signature: token,
-      sdkKey: process.env.mYUp0Z8RQnG50y0cTfZbGg
+      sdkKey: process.env.ZOOM_SDK_KEY,
     });
   } catch (err) {
     console.error("❌ Error generating signature:", err);
